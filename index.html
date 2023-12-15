@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Consulting</title>
+</head>
+<body>
+  <h1>PDF Consulting</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="pdf">
+    <input type="text" id="question" placeholder="Escribe tu pregunta" value="">
+    <input type="submit" value="Subir">
+  </form>
+
+  <div id="dialog">
+    <p id="question"></p>
+    <p id="answer"></p>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Al enviar el formulario
+      $(document).on("submit", "#upload", function(event) {
+        // Obtiene el archivo PDF
+        var pdf = $("#pdf").prop("files")[0];
+
+        // Crea un objeto FormData
+        var formData = new FormData();
+        formData.append("pdf", pdf);
+
+        // Envia el formulario al servidor
+        $.ajax({
+          url: "/upload",
+          type: "post",
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            // Muestra la pregunta y la respuesta
+            $("#question").text(response.question);
+            $("#answer").text(response.answer);
+          }
+        });
+
+        event.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>
