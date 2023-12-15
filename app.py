@@ -1,24 +1,40 @@
-import transformers
+from flask import Flask, render_template, request
+import spacy
+from PyPDF2 import PdfFileReader
 
 app = Flask(__name__)
 
-model = transformers.T5ForConditionalGeneration.from_pretrained("t5-base")
+# Carga del modelo de spaCy
+nlp = spacy.load("es_core_news_sm")
 
-@app.route("/upload", methods=["POST", "GET"])
-def upload():
-  if request.method == "POST":
-    pdf = request.files["pdf"]
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-    pdf_content = pdf.read()
+@app.route("/procesar_pdf", methods=["POST"])
+def procesar_pdf():
+    if request.method == "POST":
+        # Procesamiento del archivo PDF
+        pdf_file = request.files["pdf_file"]
+        text = extraer_texto(pdf_file)
+        
+        # Procesamiento de lenguaje natural con spaCy
+        doc = nlp(text)
+        
+        # Realizar aquí las operaciones deseadas con el documento spaCy (resumen, traducción, etc.)
+        # Ejemplo: obtener entidades nombradas
+        entidades = [ent.text for ent in doc.ents]
 
-    response = model.generate(input_text=pdf_content)
+        return render_template("index.html", resultados=entidades)
 
-    question = response[0]["input_text"]
-    answer = response[0]["output_text"]
-
-    return render_template("index.html", question=question, answer=answer)
-  else:
-    return "Solo se permite el método POST"
+def extraer_texto(pdf_file):
+    # Extraer texto de un archivo PDF
+    text = ""
+    with open(pdf_file, "rb") as file:
+        pdf_reader = PdfFileReader(file)
+        for page_num in range(pdf_reader.numPages):
+            text += pdf_reader.getPage(page_num).extractText()
+    return text
 
 if __name__ == "__main__":
-  app.run()
+    app.run(debug=True)
