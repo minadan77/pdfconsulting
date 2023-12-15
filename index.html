@@ -1,51 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>PDF Consulting</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #resultados {
+            margin-top: 20px;
+        }
+    </style>
+    <title>Interacción con PDF</title>
 </head>
 <body>
-  <h1>PDF Consulting</h1>
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="pdf">
-    <input type="text" id="question" placeholder="Escribe tu pregunta" value="">
-    <input type="submit" value="Subir">
-  </form>
-
-  <div id="dialog">
-    <p id="question"></p>
-    <p id="answer"></p>
-  </div>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      // Al enviar el formulario
-      $(document).on("submit", "#upload", function(event) {
-        // Obtiene el archivo PDF
-        var pdf = $("#pdf").prop("files")[0];
-
-        // Crea un objeto FormData
-        var formData = new FormData();
-        formData.append("pdf", pdf);
-
-        // Envia el formulario al servidor
-        $.ajax({
-          url: "/upload",
-          type: "post",
-          data: formData,
-          processData: true,
-          contentType: false,
-          success: function(response) {
-            // Muestra la pregunta y la respuesta
-            $("#question").text(response.question);
-            $("#answer").text(response.answer);
-          }
-        });
-
-        event.preventDefault();
-      });
-    });
-  </script>
+    <h1>Interacción con PDF</h1>
+    <form action="/procesar_pdf" method="post" enctype="multipart/form-data">
+        <input type="file" name="pdf_file" accept=".pdf" required>
+        <button type="submit">Procesar PDF</button>
+    </form>
+    <div id="resultados"></div>
 </body>
 </html>
