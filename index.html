@@ -62,7 +62,7 @@
                     url: "/upload",
                     type: "post",
                     data: formData,
-                    processData: true,
+                    processData: false,  // Cambiado a false para evitar el procesamiento automático de datos
                     contentType: false,
                     success: function(response) {
                         // Muestra la pregunta y la respuesta
@@ -78,7 +78,7 @@
 </head>
 <body>
     <h1>Interacción con PDF</h1>
-    <form action="/procesar_pdf" method="post" enctype="multipart/form-data">
+    <form id="upload" action="/procesar_pdf" method="post" enctype="multipart/form-data">
         <input type="file" name="pdf_file" accept=".pdf" required>
         <button type="submit">Procesar PDF</button>
     </form>
