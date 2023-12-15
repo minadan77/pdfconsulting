@@ -51,15 +51,15 @@
             // Al enviar el formulario
             $(document).on("submit", "#upload", function(event) {
                 // Obtiene el archivo PDF
-                var pdf = $("#pdf").prop("files")[0];
+                var pdf = $("#pdf_file").prop("files")[0];
 
                 // Crea un objeto FormData
                 var formData = new FormData();
-                formData.append("pdf", pdf);
+                formData.append("pdf_file", pdf);
 
                 // Envia el formulario al servidor
                 $.ajax({
-                    url: "/upload",
+                    url: "/procesar_pdf",
                     type: "post",
                     data: formData,
                     processData: false,  // Cambiado a false para evitar el procesamiento automático de datos
