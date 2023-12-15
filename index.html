@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Consulting</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -34,8 +35,46 @@
         #resultados {
             margin-top: 20px;
         }
+
+        #dialog {
+            margin-top: 20px;
+        }
+
+        #question,
+        #answer {
+            color: #333;
+        }
     </style>
-    <title>Interacción con PDF</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Al enviar el formulario
+            $(document).on("submit", "#upload", function(event) {
+                // Obtiene el archivo PDF
+                var pdf = $("#pdf").prop("files")[0];
+
+                // Crea un objeto FormData
+                var formData = new FormData();
+                formData.append("pdf", pdf);
+
+                // Envia el formulario al servidor
+                $.ajax({
+                    url: "/upload",
+                    type: "post",
+                    data: formData,
+                    processData: true,
+                    contentType: false,
+                    success: function(response) {
+                        // Muestra la pregunta y la respuesta
+                        $("#question").text(response.question);
+                        $("#answer").text(response.answer);
+                    }
+                });
+
+                event.preventDefault();
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Interacción con PDF</h1>
@@ -44,5 +83,10 @@
         <button type="submit">Procesar PDF</button>
     </form>
     <div id="resultados"></div>
+
+    <div id="dialog">
+        <p id="question"></p>
+        <p id="answer"></p>
+    </div>
 </body>
 </html>
